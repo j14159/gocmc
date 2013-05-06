@@ -7,6 +7,7 @@ package gocmc
 */
 import "C"
 import "fmt"
+import "strings"
 
 type Destination struct {
     Name string
@@ -24,7 +25,8 @@ func GetDestinations() (ret map[int] Destination) {
         dest := C.MIDIGetDestination(x)
         var destName C.CFStringRef
         C.MIDIObjectGetStringProperty((C.MIDIObjectRef)(dest), C.kMIDIPropertyName, &destName)
-        ret[int(x)] = Destination{ cstrToStr(destName), dest }
+        cleanName := strings.Trim(cstrToStr(destName), "\u0000")
+        ret[int(x)] = Destination{ cleanName, dest }
     }
 
     return
