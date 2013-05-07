@@ -54,7 +54,7 @@ type NoteEvent struct {
     Velocity int
 }
 
-func NewOutput(client C.MIDIClientRef, name string, midiChannel int, destination C.MIDIEndpointRef) (ret Output) {
+func makeOutput(client C.MIDIClientRef, name string, midiChannel int, destination C.MIDIEndpointRef) (ret Output) {
     var outPort C.MIDIPortRef
     C.MIDIOutputPortCreate(client, strToCfstr(name), &outPort)
     ret = Output{outPort, midiChannel, destination, make(chan NoteEvent)}

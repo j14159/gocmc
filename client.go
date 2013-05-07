@@ -8,7 +8,11 @@ package gocmc
 import "C"
 import "fmt"
 
-func MakeClient(name string) (C.MIDIClientRef) {
+type Client struct {
+    client C.MIDIClientRef
+}
+
+func MakeClient(name string) (Client) {
     cfName := strToCfstr(name)
     var client C.MIDIClientRef
     err := C.MIDIClientCreate(cfName, nil, nil, &client)
@@ -17,5 +21,9 @@ func MakeClient(name string) (C.MIDIClientRef) {
         fmt.Println("Error creating client:  ", int(err))
     }
 
-    return client
+    return Client{client}
+}
+
+func (client Client) NewOutput(name string, midiChannel int, destination C.MIDIEndpointRef) (Output) {
+    return makeOutput(client.client, name, midiChannel, destination)
 }

@@ -14,19 +14,18 @@ type Destination struct {
     Endpoint C.MIDIEndpointRef
 }
 
-func GetDestinations() (ret map[int] Destination) {
+func GetDestinations() (ret map[string] Destination) {
     destCount := C.MIDIGetNumberOfDestinations()
     fmt.Println("Found destination count:  ", destCount)
 
-    ret = make(map[int] Destination)
-
+    ret = make(map[string] Destination)
     var x C.ItemCount = 0
     for ; x < destCount; x++ {
         dest := C.MIDIGetDestination(x)
         var destName C.CFStringRef
         C.MIDIObjectGetStringProperty((C.MIDIObjectRef)(dest), C.kMIDIPropertyName, &destName)
         cleanName := strings.Trim(cstrToStr(destName), "\u0000")
-        ret[int(x)] = Destination{ cleanName, dest }
+        ret[cleanName] = Destination{ cleanName, dest }
     }
 
     return
