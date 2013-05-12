@@ -24,6 +24,6 @@ func MakeClient(name string) (Client) {
     return Client{client}
 }
 
-func (client Client) NewOutput(name string, midiChannel int, destination C.MIDIEndpointRef) (Output) {
-    return makeOutput(client.client, name, midiChannel, destination)
+func (client Client) NewOutput(name string, midiChannel int, destination CoreMidiEndpoint) (Output) {
+    return makeOutput(client.client, name, midiChannel, (C.MIDIEndpointRef)(destination))
 }

@@ -9,9 +9,11 @@ import "C"
 import "fmt"
 import "strings"
 
+type CoreMidiEndpoint C.MIDIEndpointRef
+
 type Destination struct {
     Name string
-    Endpoint C.MIDIEndpointRef
+    Endpoint CoreMidiEndpoint//C.MIDIEndpointRef
 }
 
 func GetDestinations() (ret map[string] Destination) {
@@ -25,7 +27,7 @@ func GetDestinations() (ret map[string] Destination) {
         var destName C.CFStringRef
         C.MIDIObjectGetStringProperty((C.MIDIObjectRef)(dest), C.kMIDIPropertyName, &destName)
         cleanName := strings.Trim(cstrToStr(destName), "\u0000")
-        ret[cleanName] = Destination{ cleanName, dest }
+        ret[cleanName] = Destination{ cleanName, CoreMidiEndpoint(dest) }
     }
 
     return

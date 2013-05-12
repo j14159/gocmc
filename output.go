@@ -57,7 +57,7 @@ type NoteEvent struct {
 func makeOutput(client C.MIDIClientRef, name string, midiChannel int, destination C.MIDIEndpointRef) (ret Output) {
     var outPort C.MIDIPortRef
     C.MIDIOutputPortCreate(client, strToCfstr(name), &outPort)
-    ret = Output{outPort, midiChannel, destination, make(chan NoteEvent)}
+    ret = Output{outPort, midiChannel, destination, make(chan NoteEvent, 100)}
     go outputHandler(ret)
     return
 }
